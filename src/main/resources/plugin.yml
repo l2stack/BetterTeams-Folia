@@ -17,6 +17,8 @@ softdepend:
 loadbefore:
   - zKoth
 
+folia-supported: true
+
 permissions:
   betterTeams.standard:
     description: This permission gives the user access to the teams system (joining, leaving teams etc.)
