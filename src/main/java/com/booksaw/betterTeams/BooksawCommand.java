@@ -5,6 +5,8 @@ import com.booksaw.betterTeams.commands.SubCommand;
 import com.booksaw.betterTeams.message.MessageManager;
 import lombok.Getter;
 import lombok.Setter;
+import vn.onemc.l2stack.FoliaLibGetter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
@@ -59,7 +61,8 @@ public class BooksawCommand extends BukkitCommand {
 		boolean async = subCommand.checkAsync(args);
 
 		if (async) {
-			Bukkit.getScheduler().runTaskAsynchronously(Main.plugin, () -> runExecution(sender, label, args));
+			//Bukkit.getScheduler().runTaskAsynchronously(Main.plugin, () -> runExecution(sender, label, args));
+			FoliaLibGetter.getFoliaLib().getScheduler().runAsync(t -> runExecution(sender, label, args));
 		} else {
 			runExecution(sender, label, args);
 		}

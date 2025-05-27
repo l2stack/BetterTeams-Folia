@@ -1,12 +1,15 @@
 package com.booksaw.betterTeams.commands.team;
 
 import com.booksaw.betterTeams.CommandResponse;
-import com.booksaw.betterTeams.Main;
+// import com.booksaw.betterTeams.Main;
 import com.booksaw.betterTeams.Team;
 import com.booksaw.betterTeams.commands.SubCommand;
 import com.booksaw.betterTeams.message.MessageManager;
+
+import vn.onemc.l2stack.FoliaLibGetter;
+
 import org.bukkit.command.CommandSender;
-import org.bukkit.scheduler.BukkitRunnable;
+// import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
@@ -28,10 +31,11 @@ public class ListCommand extends SubCommand {
 
 		MessageManager.sendMessage(sender, "loading");
 
-		new BukkitRunnable() {
+		// new BukkitRunnable() {
 
-			@Override
-			public void run() {
+		FoliaLibGetter.getFoliaLib().getScheduler().runAsync(t->{
+		// 	@Override
+		// 	public void run() {
 				String[] teams = Team.getTeamManager().sortTeamsByMembers();
 
 				// displaying the page
@@ -46,8 +50,9 @@ public class ListCommand extends SubCommand {
 				}
 
 				MessageManager.sendMessage(sender, "list.footer");
-			}
-		}.runTaskAsynchronously(Main.plugin);
+				});
+		// 	}
+		// }.runTaskAsynchronously(Main.plugin);
 		return new CommandResponse(true);
 	}
 

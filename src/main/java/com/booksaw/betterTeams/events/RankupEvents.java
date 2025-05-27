@@ -7,12 +7,14 @@ import com.booksaw.betterTeams.customEvents.post.PostDemotePlayerEvent;
 import com.booksaw.betterTeams.customEvents.post.PostLevelupTeamEvent;
 import com.booksaw.betterTeams.customEvents.post.PostPromotePlayerEvent;
 import me.clip.placeholderapi.PlaceholderAPI;
+import vn.onemc.l2stack.FoliaLibGetter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitRunnable;
+// import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.Objects;
@@ -43,10 +45,11 @@ public class RankupEvents implements Listener {
 	}
 
 	private void runCommandList(List<String> commands, Team team, Object level, OfflinePlayer source) {
-		new BukkitRunnable() {
+		FoliaLibGetter.getFoliaLib().getScheduler().runNextTick(t->{
+		// new BukkitRunnable() {
 
-			@Override
-			public void run() {
+		// 	@Override
+		// 	public void run() {
 				for (String str : commands) {
 					str = str.replace("%team%", team.getName());
 					str = str.replace("%level%", level.toString());
@@ -69,8 +72,9 @@ public class RankupEvents implements Listener {
 
 					}
 				}
-			}
-		}.runTask(Main.plugin);
+				});
+		// 	}
+		// }.runTask(Main.plugin);
 
 	}
 

@@ -7,6 +7,9 @@ import com.booksaw.betterTeams.team.LocationSetComponent;
 import com.booksaw.betterTeams.team.storage.team.SeparatedYamlTeamStorage;
 import com.booksaw.betterTeams.team.storage.team.StoredTeamValue;
 import com.booksaw.betterTeams.team.storage.team.TeamStorage;
+
+import vn.onemc.l2stack.FoliaLibGetter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -16,7 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
+// import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -292,9 +295,10 @@ public class SeparatedYamlStorageManager extends YamlStorageManager implements L
 		}
 
 		// purging all teams that are not loaded async to minimise server impact
-		new BukkitRunnable() {
-			@Override
-			public void run() {
+		FoliaLibGetter.getFoliaLib().getScheduler().runAsync(t -> {
+		// new BukkitRunnable() {
+		// 	@Override
+		// 	public void run() {
 				for (File f : teamStorageDir.listFiles()) {
 					String teamID = f.getName();
 					teamID = teamID.replace(".yml", "");
@@ -313,8 +317,9 @@ public class SeparatedYamlStorageManager extends YamlStorageManager implements L
 						e.printStackTrace();
 					}
 				}
-			}
-		}.runTaskAsynchronously(Main.plugin);
+			});
+		//	}
+		//}.runTaskAsynchronously(Main.plugin);
 	}
 
 	private interface ResetLoadedTeamValue {

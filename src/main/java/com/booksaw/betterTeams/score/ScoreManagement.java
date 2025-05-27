@@ -5,16 +5,19 @@ import com.booksaw.betterTeams.Team;
 import com.booksaw.betterTeams.customEvents.post.PostPurgeEvent;
 import com.booksaw.betterTeams.score.ScoreChange.ChangeType;
 import me.clip.placeholderapi.PlaceholderAPI;
+import vn.onemc.l2stack.FoliaLibGetter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.scheduler.BukkitScheduler;
+// import org.bukkit.scheduler.BukkitScheduler;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ScoreManagement implements Listener {
 
@@ -59,9 +62,9 @@ public class ScoreManagement implements Listener {
 	 * This class is used to schedule events
 	 */
 	private void sched() {
-		BukkitScheduler scheduler = Main.plugin.getServer().getScheduler();
-		scheduler.scheduleSyncRepeatingTask(Main.plugin, () -> {
-
+		//BukkitScheduler scheduler = Main.plugin.getServer().getScheduler();
+		// scheduler.scheduleSyncRepeatingTask(Main.plugin, () -> {
+		FoliaLibGetter.getFoliaLib().getScheduler().runTimer(t -> {
 			if (purges.get(nextPurge).isNow()) {
 				if (run) {
 					return;
@@ -78,20 +81,24 @@ public class ScoreManagement implements Listener {
 			}
 			// clean pass so it can reset the tracker
 			run = false;
-
-		}, 0L, 20 * 60L);
+		}, 0, 60, TimeUnit.SECONDS);
+		// }, 0L, 20 * 60L);
 
 	}
 
 	@EventHandler
 	public void onPurge(PostPurgeEvent e) {
-		Bukkit.getScheduler().runTask(Main.plugin, () -> Main.plugin.getConfig().getStringList("purgeCommands").forEach(cmd -> {
-			if (Main.plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-				cmd = PlaceholderAPI.setPlaceholders(null, cmd);
-			}
+		FoliaLibGetter.getFoliaLib().getScheduler().runNextTick(t -> {
+			Main.plugin.getConfig().getStringList("purgeCommands").forEach(cmd -> {
+			// Bukkit.getScheduler().runTask(Main.plugin, () -> Main.plugin.getConfig().getStringList("purgeCommands").forEach(cmd -> {
+				if (Main.plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+					cmd = PlaceholderAPI.setPlaceholders(null, cmd);
+				}
 
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
-		}));
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+			});
+		});
+		// }));
 	}
 
 	@EventHandler

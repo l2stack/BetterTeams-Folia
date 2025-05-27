@@ -1,6 +1,11 @@
 package com.booksaw.betterTeams;
 
 import com.booksaw.betterTeams.message.MessageManager;
+
+import vn.onemc.l2stack.FoliaLibGetter;
+
+import java.util.concurrent.TimeUnit;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -40,20 +45,23 @@ public class PlayerTeleport {
 
 
 		if (player.hasPermission("betterteams.warmup.bypass")) {
-			Bukkit.getScheduler().runTask(Main.plugin, this::runTp);
+			//Bukkit.getScheduler().runTask(Main.plugin, this::runTp);
+			FoliaLibGetter.getFoliaLib().getScheduler().runNextTick(t -> runTp());
 			return;
 		}
 
 		int wait = Main.plugin.getConfig().getInt("tpDelay");
 		if (wait <= 0) {
-			Bukkit.getScheduler().runTask(Main.plugin, this::runTp);
+			//Bukkit.getScheduler().runTask(Main.plugin, this::runTp);
+			FoliaLibGetter.getFoliaLib().getScheduler().runNextTick(t -> runTp());
 			return;
 		}
 
 		// sending the wait message
 		MessageManager.sendMessage(player, "teleport.wait", wait);
 
-		Bukkit.getScheduler().runTaskLater(Main.plugin, () -> {
+		FoliaLibGetter.getFoliaLib().getScheduler().runLater(t -> {
+		// Bukkit.getScheduler().runTaskLater(Main.plugin, () -> {
 			if (canTp()) {
 				try {
 					runTp();
@@ -63,7 +71,8 @@ public class PlayerTeleport {
 			} else {
 				cancel();
 			}
-		}, 20L * wait);
+		}, wait, TimeUnit.SECONDS);
+		// }, 20L * wait);
 
 	}
 

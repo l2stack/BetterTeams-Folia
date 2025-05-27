@@ -3,6 +3,9 @@ package com.booksaw.betterTeams.commands.team;
 import com.booksaw.betterTeams.*;
 import com.booksaw.betterTeams.commands.presets.TeamSubCommand;
 import com.booksaw.betterTeams.events.InventoryManagement;
+
+import vn.onemc.l2stack.FoliaLibGetter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -20,8 +23,9 @@ public class EchestCommand extends TeamSubCommand {
 					+ " this should never occur, report to booksaw");
 		}
 
-		Bukkit.getScheduler().runTask(Main.plugin,
-				() -> Objects.requireNonNull(player.getPlayer().getPlayer()).openInventory(team.getEchest()));
+		FoliaLibGetter.getFoliaLib().getScheduler().runNextTick(t->Objects.requireNonNull(player.getPlayer().getPlayer()).openInventory(team.getEchest()));
+		// Bukkit.getScheduler().runTask(Main.plugin,
+		// 		() -> Objects.requireNonNull(player.getPlayer().getPlayer()).openInventory(team.getEchest()));
 
 		return new CommandResponse(true);
 	}

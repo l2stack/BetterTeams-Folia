@@ -5,9 +5,12 @@ import com.booksaw.betterTeams.Main;
 import com.booksaw.betterTeams.Team;
 import com.booksaw.betterTeams.commands.SubCommand;
 import com.booksaw.betterTeams.message.MessageManager;
+
+import vn.onemc.l2stack.FoliaLibGetter;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+// import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
@@ -26,10 +29,11 @@ public class TopCommand extends SubCommand {
 
 		MessageManager.sendMessage(sender, "loading");
 
-		new BukkitRunnable() {
+		FoliaLibGetter.getFoliaLib().getScheduler().runAsync(t->{
+		// new BukkitRunnable() {
 
-			@Override
-			public void run() {
+		// 	@Override
+		// 	public void run() {
 				boolean contained = false;
 				String[] teams = Team.getTeamManager().sortTeamsByScore();
 				MessageManager.sendMessage(sender, "top.leaderboard");
@@ -73,8 +77,9 @@ public class TopCommand extends SubCommand {
 						// to save an additional check on arrays length
 					}
 				}
-			}
-		}.runTaskAsynchronously(Main.plugin);
+				});
+		// 	}
+		// }.runTaskAsynchronously(Main.plugin);
 
 		return new CommandResponse(true);
 	}

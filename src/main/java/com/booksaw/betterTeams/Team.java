@@ -15,19 +15,21 @@ import com.booksaw.betterTeams.team.storage.team.TeamStorage;
 import com.booksaw.betterTeams.text.LegacyTextUtils;
 
 import lombok.Getter;
+import vn.onemc.l2stack.FoliaLibGetter;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.scheduler.BukkitRunnable;
+// import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -853,10 +855,11 @@ public class Team {
 			return;
 		}
 
-		new BukkitRunnable() {
+		FoliaLibGetter.getFoliaLib().getScheduler().runLaterAsync(task -> {
+		// new BukkitRunnable() {
 
-			@Override
-			public void run() {
+		// 	@Override
+		// 	public void run() {
 				Player p = Bukkit.getPlayer(uniqueId);
 				if (p == null || getTeamPlayer(p) != null) {
 					return;
@@ -864,9 +867,9 @@ public class Team {
 				invitedPlayers.remove(uniqueId);
 
 				MessageManager.sendMessage(p, "invite.expired", getName());
-			}
-		}.runTaskLaterAsynchronously(Main.plugin, invite * 20L);
-
+			}, invite, TimeUnit.SECONDS);
+		// 	}
+		// }.runTaskLaterAsynchronously(Main.plugin, invite * 20L);
 	}
 
 	/**

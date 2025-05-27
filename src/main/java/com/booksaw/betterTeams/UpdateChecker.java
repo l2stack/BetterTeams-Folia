@@ -2,12 +2,14 @@ package com.booksaw.betterTeams;
 
 import com.booksaw.betterTeams.message.MessageManager;
 import net.md_5.bungee.api.ChatColor;
+import vn.onemc.l2stack.FoliaLibGetter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
+// import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -16,6 +18,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 public class UpdateChecker implements Listener {
@@ -35,9 +38,12 @@ public class UpdateChecker implements Listener {
 	}
 
 	public void checkForUpdate() {
-		(new BukkitRunnable() {
-			@Override
-			public void run() {
+		FoliaLibGetter.getFoliaLib().getScheduler().runTimerAsync(
+			
+		// (new BukkitRunnable() {
+		// 	@Override
+		// 	public void run() {
+			task -> {
 				try {
 					// Create URL using the URI class which handles IDNs properly
 					URI uri = new URI("https://api.spigotmc.org/legacy/update.php?resource=" + ID);
@@ -50,7 +56,8 @@ public class UpdateChecker implements Listener {
 				} catch (IOException | URISyntaxException e) {
 					Bukkit.getServer().getConsoleSender().sendMessage(
 							ChatColor.translateAlternateColorCodes('&', "&cUpdate checker failed! Disabling."));
-					cancel();
+					//cancel();
+					task.cancel();		
 					return;
 				}
 
@@ -60,9 +67,12 @@ public class UpdateChecker implements Listener {
 				Main.plugin.getLogger().warning(MessageManager.getMessage("admin.update"));
 
 				latest = false;
-				cancel();
-			}
-		}).runTaskTimerAsynchronously(this.javaPlugin, 0L, 10 * 60 * 20);
+				//cancel();
+				task.cancel();
+				
+			} , 0, 10, TimeUnit.MINUTES);
+		//	}
+		//}).runTaskTimerAsynchronously(this.javaPlugin, 0L, 10 * 60 * 20);
 	}
 
 	private boolean isLatestVersion() {

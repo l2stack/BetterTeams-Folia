@@ -14,13 +14,16 @@ import com.songoda.ultimateclaims.claim.Claim;
 import com.songoda.ultimateclaims.claim.ClaimDeleteReason;
 import com.songoda.ultimateclaims.member.ClaimMember;
 import com.songoda.ultimateclaims.member.ClaimRole;
+
+import vn.onemc.l2stack.FoliaLibGetter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
+// import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.Objects;
@@ -74,14 +77,16 @@ public class UltimateClaimsManager implements Listener {
 				continue;
 			}
 
-			new BukkitRunnable() {
+			FoliaLibGetter.getFoliaLib().getScheduler().runLater(t->{
+			// new BukkitRunnable() {
 
-				@Override
-				public void run() {
+			// 	@Override
+			// 	public void run() {
 					ClaimMember member = c.addMember(e.getPlayer(), ClaimRole.MEMBER);
 					JavaPlugin.getPlugin(UltimateClaims.class).getDataHelper().createMember(member);
-				}
-			}.runTaskLater(Main.plugin, 1);
+			}, 1);
+			// 	}
+			// }.runTaskLater(Main.plugin, 1);
 		}
 	}
 
@@ -162,14 +167,15 @@ public class UltimateClaimsManager implements Listener {
 				continue;
 			}
 
-			new BukkitRunnable() {
+			// new BukkitRunnable() {
 
-				@Override
-				public void run() {
-					c.destroy(ClaimDeleteReason.PLAYER);
-				}
-			}.runTask(Main.plugin);
+			// 	@Override
+			// 	public void run() {
+			// 		c.destroy(ClaimDeleteReason.PLAYER);
+			// 	}
+			// }.runTask(Main.plugin);
 
+			FoliaLibGetter.getFoliaLib().getScheduler().runNextTick(t->c.destroy(ClaimDeleteReason.PLAYER));
 
 			if (player.getPlayer().isOnline()) {
 				MessageManager.sendMessage(player.getPlayer().getPlayer(), "uclaim.dissolve");

@@ -7,14 +7,17 @@ import com.booksaw.betterTeams.text.LegacyTextUtils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import vn.onemc.l2stack.FoliaLibGetter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.scheduler.BukkitScheduler;
+// import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 import java.util.Objects;
 
 public abstract class HologramManager {
@@ -82,8 +85,9 @@ public abstract class HologramManager {
 	}
 
 	public void startUpdates() {
-		BukkitScheduler scheduler = Main.plugin.getServer().getScheduler();
-		scheduler.scheduleSyncRepeatingTask(Main.plugin, () -> {
+		FoliaLibGetter.getFoliaLib().getScheduler().runTimer(t->{
+		// BukkitScheduler scheduler = Main.plugin.getServer().getScheduler();
+		// scheduler.scheduleSyncRepeatingTask(Main.plugin, () -> {
 			if (!isHolographicDisplaysEnabled() && !isDecentHologramsEnabled()) {
 				return;
 			}
@@ -96,7 +100,8 @@ public abstract class HologramManager {
 					}
 				}
 			}
-		}, 0L, 20 * 60L);
+			}, 0, 60, TimeUnit.SECONDS);
+		// }, 0L, 20 * 60L);
 	}
 
 	private boolean isHolographicDisplaysEnabled() {
