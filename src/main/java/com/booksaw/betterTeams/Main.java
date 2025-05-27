@@ -37,6 +37,8 @@ import lombok.Getter;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import vn.onemc.l2stack.FoliaLibGetter;
+
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
@@ -121,6 +123,9 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		setupMetrics();
+
+		// Launch foliaLib
+		FoliaLibGetter.initFoliaLib(this);
 
 		String language = getConfig().getString("language");
 		MessageManager.setLanguage(language);
