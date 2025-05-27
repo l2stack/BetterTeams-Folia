@@ -151,6 +151,14 @@
             <version>33.4.8-jre</version>
         </dependency>
 
+        <!-- FoliaLib by TechnicallyCoded: https://github.com/TechnicallyCoded/FoliaLib -->
+        <dependency>
+            <groupId>com.github.technicallycoded</groupId>
+            <artifactId>FoliaLib</artifactId>
+            <version>main-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- JUnit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -189,6 +197,12 @@
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>booksawshaded.com.org.bstats</shadedPattern>
+                        </relocation>
+
+                        <!-- Relocate folialib package -->
+                        <relocation>
+                            <pattern>com.tcoded.folialib</pattern>
+                            <shadedPattern>com.booksaw.betterTeams.lib.folialib</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>
