@@ -29,7 +29,7 @@ public class HomeTeama extends SubCommand {
 
 		Player p = (Player) sender;
 		//Bukkit.getScheduler().runTask(Main.plugin, () -> p.teleport(team.getTeamHome()));
-		FoliaLibGetter.getFoliaLib().getScheduler().runNextTick(t->p.teleport(team.getTeamHome()));
+		FoliaLibGetter.getFoliaLib().getScheduler().runNextTick(t->FoliaLibGetter.getFoliaLib().getScheduler().teleportAsync(p, team.getTeamHome()));
 		return new CommandResponse(true, "admin.home.success");
 	}
 

@@ -87,7 +87,8 @@ public class PlayerTeleport {
 			return;
 		}
 
-		player.teleport(location);
+		//player.teleport(location);
+		FoliaLibGetter.getFoliaLib().getScheduler().teleportAsync(player, location);
 		MessageManager.sendMessage(player, reference);
 	}
 

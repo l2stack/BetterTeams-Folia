@@ -218,12 +218,14 @@ public class TeleportTeama extends SubCommand {
 				if (locations.length != 1) {
 					for (int i = 0; i < targetList.size(); i++) {
 						if (locations[i] == null) continue; // Some teams may not have their home set
-						targetList.get(i).teleport(locations[i]);
+						FoliaLibGetter.getFoliaLib().getScheduler().teleportAsync(targetList.get(i), locations[i]);
+						// targetList.get(i).teleport(locations[i]);
 					}
 					return;
 				}
 				for (Player player : targetList) {
-					player.teleport(locations[0]);
+					//player.teleport(locations[0]);
+					FoliaLibGetter.getFoliaLib().getScheduler().teleportAsync(player, locations[0]);
 				}
 				});
 		// 	}
