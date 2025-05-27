@@ -386,7 +386,10 @@ public class Main extends JavaPlugin {
 		Main.plugin.getLogger().info("Display team name config value: " + getConfig().getString("displayTeamName"));
 		BelowNameType type = BelowNameType.getType(Objects.requireNonNull(getConfig().getString("displayTeamName")));
 		Main.plugin.getLogger().info("Loading below name. Type: " + type);
-		if (getConfig().getBoolean("useTeams")) {
+		// if (getConfig().getBoolean("useTeams")) {
+		// Automatically disable bukkit team if server is detected as folia
+		if (getConfig().getBoolean("useTeams") && !FoliaLibGetter.getFoliaLib().isFolia())
+		{
 			if (teamManagement == null) {
 
 				teamManagement = new MCTeamManagement(type);
