@@ -8,8 +8,10 @@ import com.booksaw.betterTeams.commands.SubCommand;
 import vn.onemc.l2stack.FoliaLibGetter;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.List;
 
@@ -29,7 +31,15 @@ public class HomeTeama extends SubCommand {
 
 		Player p = (Player) sender;
 		//Bukkit.getScheduler().runTask(Main.plugin, () -> p.teleport(team.getTeamHome()));
-		FoliaLibGetter.getFoliaLib().getScheduler().runNextTick(t->FoliaLibGetter.getFoliaLib().getScheduler().teleportAsync(p, team.getTeamHome()));
+		final Location f = p.getLocation(), to = team.getTeamHome();
+		FoliaLibGetter.getFoliaLib().getScheduler().runNextTick(t->FoliaLibGetter.getFoliaLib().getScheduler().teleportAsync(p, to).thenAccept(r -> {
+			if (r) {
+				PlayerTeleportEvent e = new PlayerTeleportEvent(p, f, to);
+				FoliaLibGetter.getFoliaLib().getScheduler().runNextTick(t1 -> {
+					Bukkit.getPluginManager().callEvent(e);
+				});
+			}
+		}));
 		return new CommandResponse(true, "admin.home.success");
 	}
 

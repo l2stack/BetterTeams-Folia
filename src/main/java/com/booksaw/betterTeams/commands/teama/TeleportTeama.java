@@ -14,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 // import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
 
@@ -218,14 +219,31 @@ public class TeleportTeama extends SubCommand {
 				if (locations.length != 1) {
 					for (int i = 0; i < targetList.size(); i++) {
 						if (locations[i] == null) continue; // Some teams may not have their home set
-						FoliaLibGetter.getFoliaLib().getScheduler().teleportAsync(targetList.get(i), locations[i]);
+						final Player p = targetList.get(i);
+						final Location to = locations[i], f = p.getLocation();
+						FoliaLibGetter.getFoliaLib().getScheduler().teleportAsync(p, to).thenAccept(res -> {
+							if (res) {
+								PlayerTeleportEvent e = new PlayerTeleportEvent(p, f, to);
+								FoliaLibGetter.getFoliaLib().getScheduler().runNextTick(t1 -> {
+									Bukkit.getPluginManager().callEvent(e);
+								});
+							}
+						});
 						// targetList.get(i).teleport(locations[i]);
 					}
 					return;
 				}
 				for (Player player : targetList) {
 					//player.teleport(locations[0]);
-					FoliaLibGetter.getFoliaLib().getScheduler().teleportAsync(player, locations[0]);
+					final Location to = locations[0], f = player.getLocation();
+					FoliaLibGetter.getFoliaLib().getScheduler().teleportAsync(player, to).thenAccept(res -> {
+						if (res) {
+							PlayerTeleportEvent e = new PlayerTeleportEvent(player, f, to);
+							FoliaLibGetter.getFoliaLib().getScheduler().runNextTick(t1 -> {
+								Bukkit.getPluginManager().callEvent(e);
+							});
+						}
+					});
 				}
 				});
 		// 	}

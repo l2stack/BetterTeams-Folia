@@ -88,7 +88,15 @@ public class PlayerTeleport {
 		}
 
 		//player.teleport(location);
-		FoliaLibGetter.getFoliaLib().getScheduler().teleportAsync(player, location);
+		final Location l = player.getLocation();
+		FoliaLibGetter.getFoliaLib().getScheduler().teleportAsync(player, location).thenAccept(res -> {
+			if (res) {
+				PlayerTeleportEvent e = new PlayerTeleportEvent(player, l, location);
+				FoliaLibGetter.getFoliaLib().getScheduler().runNextTick(t -> {
+					Bukkit.getPluginManager().callEvent(e);
+				});
+			}
+		});
 		MessageManager.sendMessage(player, reference);
 	}
 
